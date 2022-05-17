@@ -1,0 +1,6 @@
+project: rnshah9/squashfs-tools-ng
+target: sqfs2tar
+tests: null
+
+cmds:
+  - cmd: /repo/.libs/sqfs2tar @@
