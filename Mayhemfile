@@ -2,4 +2,4 @@ project: squashfs-tools-ng
 target: sqfs2tar
 
 cmds:
-  - cmd: /repo/.libs/sqfs2tar @@
+  - cmd: /install/bin/sqfs2tar @@
