@@ -27,8 +27,7 @@ enum {
 	DIR_STATE_NONE = 0,
 	DIR_STATE_OPENED = 1,
 	DIR_STATE_DOT = 2,
-	DIR_STATE_DOT_DOT = 3,
-	DIR_STATE_ENTRIES = 4,
+	DIR_STATE_ENTRIES = 3,
 };
 
 struct sqfs_dir_reader_t {
@@ -38,14 +37,7 @@ struct sqfs_dir_reader_t {
 	sqfs_meta_reader_t *meta_inode;
 	const sqfs_super_t *super;
 
-	sqfs_dir_header_t hdr;
-	sqfs_u64 dir_block_start;
-	size_t entries;
-	size_t size;
-
-	size_t start_size;
-	sqfs_u16 dir_offset;
-	sqfs_u16 inode_offset;
+	sqfs_readdir_state_t it;
 
 	sqfs_u32 flags;
 
@@ -53,21 +45,8 @@ struct sqfs_dir_reader_t {
 	int state;
 	sqfs_u64 parent_ref;
 	sqfs_u64 cur_ref;
+	sqfs_u64 ent_ref;
 	rbtree_t dcache;
 };
-
-SQFS_INTERNAL int sqfs_dir_reader_dcache_init(sqfs_dir_reader_t *rd,
-					      sqfs_u32 flags);
-
-SQFS_INTERNAL int sqfs_dir_reader_dcache_init_copy(sqfs_dir_reader_t *copy,
-						   const sqfs_dir_reader_t *rd);
-
-SQFS_INTERNAL int sqfs_dir_reader_dcache_add(sqfs_dir_reader_t *rd,
-					     sqfs_u32 inode, sqfs_u64 ref);
-
-SQFS_INTERNAL int sqfs_dir_reader_dcache_find(sqfs_dir_reader_t *rd,
-					      sqfs_u32 inode, sqfs_u64 *ref);
-
-SQFS_INTERNAL void sqfs_dir_reader_dcache_cleanup(sqfs_dir_reader_t *rd);
 
 #endif /* DIR_READER_INTERNAL_H */
