@@ -1,11 +1,10 @@
-AC_PREREQ([2.60])
-AC_INIT([squashfs-tools-ng], [1.1.4], [goliath@infraroot.at], squashfs-tools-ng)
+AC_PREREQ([2.69])
+AC_INIT([squashfs-tools-ng],[1.1.4],[goliath@infraroot.at],[squashfs-tools-ng])
 AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([foreign dist-xz subdir-objects])
 AM_SILENT_RULES([yes])
 AC_PROG_CC([cc gcc clang])
 LT_INIT([win32-dll])
-AC_PROG_CC_C99
 AC_PROG_INSTALL
 AC_PROG_SED
 AC_SYS_LARGEFILE
@@ -274,12 +273,24 @@ PKG_CHECK_MODULES(READLINE, [readline], [have_readline="yes"],
 			    [have_readline="no"])
 AM_CONDITIONAL([WITH_READLINE], [test "x$have_readline" = "xyes"])
 
+#### make sure we actually have a compressor ####
+have_compressor="no"
+
+AS_IF([test "x$with_gzip" != "xno"], [have_compressor="yes"])
+AS_IF([test "x$with_xz" != "xno"], [have_compressor="yes"])
+AS_IF([test "x$with_lzo" != "xno"], [have_compressor="yes"])
+AS_IF([test "x$with_lz4" != "xno"], [have_compressor="yes"])
+AS_IF([test "x$with_zstd" != "xno"], [have_compressor="yes"])
+
+AS_IF([test "x$have_compressor" != "xyes"],
+      [AC_MSG_FAILURE([no block compression libraries found!])])
+
 ##### additional checks #####
 AC_CHECK_HEADERS([sys/xattr.h], [], [])
 AC_CHECK_HEADERS([sys/sysinfo.h], [], [])
 AC_CHECK_HEADERS([alloca.h], [], [])
 
-AC_CHECK_FUNCS([strndup getopt getopt_long getsubopt fnmatch])
+AC_CHECK_FUNCS([strndup getopt getopt_long getsubopt fnmatch strchrnul])
 
 ##### generate output #####
 
